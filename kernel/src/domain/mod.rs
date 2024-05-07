@@ -143,7 +143,6 @@ fn init_device() -> Arc<dyn PLICDomain> {
                     // )
                     //     .unwrap()
                 }
-                #[cfg(feature = "gui")]
                 VirtioMmioDeviceType::GPU => {
                     let gpu_driver = create_gpu_domain("virtio_mmio_gpu", None);
                     if let Some(gpu_driver) = gpu_driver {
@@ -181,6 +180,10 @@ pub fn load_domains() {
     init_domains();
     init_kernel_domain();
     domain_helper::init_domain_create(Box::new(DomainCreateImpl));
+
+    let logger = create_log_domain("logger", None).unwrap();
+    logger.init().unwrap();
+    domain_helper::register_domain("logger", DomainType::LogDomain(logger), true);
 
     let fatfs = create_fs_domain("fatfs", None).unwrap();
     domain_helper::register_domain("fatfs", DomainType::FsDomain(fatfs.clone()), false);

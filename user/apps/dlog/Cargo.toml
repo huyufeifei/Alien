@@ -1,5 +1,5 @@
 [package]
-name = "domain"
+name = "dlog"
 version = "0.1.0"
 edition = "2021"
 

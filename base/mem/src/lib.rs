@@ -12,16 +12,17 @@ mod vmm;
 
 pub use data::INITRD_DATA;
 pub use frame::{alloc_frame_trackers, alloc_frames, free_frames};
+use ksync::Mutex;
 pub use memory_addr::{PhysAddr, VirtAddr};
 pub use page_table::MappingFlags;
 pub use ptable::*;
 pub use vmm::{
-    alloc_free_region, is_in_kernel_space, kernel_satp, map_area_to_kernel, query_kernel_space,
-    unmap_region_from_kernel,
+    alloc_free_region, kernel_satp, map_area_to_kernel, map_kstack_for_task, query_kernel_space,
+    unmap_kstack_for_task, unmap_region_from_kernel,
 };
 
 #[global_allocator]
-static HEAP_ALLOCATOR: Talck<spin::Mutex<()>, ClaimOnOom> =
+static HEAP_ALLOCATOR: Talck<Mutex<()>, ClaimOnOom> =
     Talc::new(unsafe { ClaimOnOom::new(Span::from_const_array(core::ptr::addr_of!(KERNEL_HEAP))) })
         .lock();
 static mut KERNEL_HEAP: [u8; config::KERNEL_HEAP_SIZE] = [0; config::KERNEL_HEAP_SIZE];
