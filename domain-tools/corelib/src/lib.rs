@@ -18,6 +18,7 @@ pub trait CoreFunction: Send + Sync {
     fn sys_trap_to_user(&self) -> usize;
     /// This func will be deleted
     fn blk_crash_trick(&self) -> bool;
+    fn blk_crash_reset(&self);
     fn sys_get_domain(&self, name: &str) -> Option<DomainType>;
     fn switch_task(&self, now: *mut TaskContext, next: *const TaskContext, next_tid: usize);
     fn sys_create_domain(&self, identifier: &str) -> Option<DomainType>;
@@ -128,6 +129,10 @@ mod core_impl {
     // todo!(delete)
     pub fn blk_crash_trick() -> bool {
         unsafe { CORE_FUNC.get_unchecked().blk_crash_trick() }
+    }
+    // todo!(delete)
+    pub fn blk_crash_reset() {
+        unsafe { CORE_FUNC.get_unchecked().blk_crash_reset() }
     }
 
     pub fn get_domain(name: &str) -> Option<DomainType> {

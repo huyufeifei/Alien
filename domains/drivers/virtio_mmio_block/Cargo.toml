@@ -16,3 +16,5 @@ virtio_mmio_common = { path = "../virtio_mmio_common" }
 
 spin = { workspace = true }
 log = "0"
+
+corelib = { path = "../../../domain-tools/corelib" }

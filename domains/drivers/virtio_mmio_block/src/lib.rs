@@ -42,6 +42,9 @@ impl BlkDeviceDomain for BlkDomain {
         Ok(())
     }
     fn read_block(&self, block: u32, mut data: RRef<[u8; 512]>) -> AlienResult<RRef<[u8; 512]>> {
+        if corelib::blk_crash_trick() {
+            panic!("TEST PANIC");
+        }
         BLK.get()
             .unwrap()
             .lock()
@@ -50,6 +53,7 @@ impl BlkDeviceDomain for BlkDomain {
         Ok(data)
     }
     fn write_block(&self, block: u32, data: &RRef<[u8; 512]>) -> AlienResult<usize> {
+        corelib::blk_crash_reset();
         BLK.get()
             .unwrap()
             .lock()

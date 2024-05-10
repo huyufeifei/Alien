@@ -9,9 +9,10 @@ use alloc::{
 };
 use core::sync::atomic::AtomicBool;
 
+use basic::println;
 use constants::{AlienError, AlienResult};
 use interface::{Basic, BlkDeviceDomain, DeviceBase, DomainType, ShadowBlockDomain};
-use log::error;
+use log::{error, warn};
 use rref::RRef;
 use spin::Once;
 
@@ -39,6 +40,7 @@ impl DeviceBase for ShadowBlockDomainImpl {
 
 impl ShadowBlockDomain for ShadowBlockDomainImpl {
     fn init(&self, blk_domain: &str) -> AlienResult<()> {
+        println!("This info is from another shadow block domain.");
         let blk = basic::get_domain(blk_domain).unwrap();
         let blk = match blk {
             DomainType::BlkDeviceDomain(blk) => blk,

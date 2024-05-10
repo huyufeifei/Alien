@@ -18,7 +18,7 @@ QEMU_ARGS :=
 
 ifeq ($(GUI),y)
 	QEMU_ARGS += -device virtio-gpu-device
-	FEATURES += gui
+	# FEATURES += gui
 else
 	QEMU_ARGS += -nographic
 endif
@@ -38,7 +38,7 @@ build:
 	@echo "Building..."
 	@ LOG=$(LOG) cargo build --release -p kernel --target $(TARGET) --features $(FEATURES)
 
-run: sdcard domains initrd build
+run: domains sdcard initrd build
 	qemu-system-riscv64 \
             -M virt \
             -bios default \

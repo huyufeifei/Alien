@@ -119,6 +119,9 @@ impl CoreFunction for DomainSyscall {
     fn blk_crash_trick(&self) -> bool {
         BLK_CRASH.load(core::sync::atomic::Ordering::Relaxed)
     }
+    fn blk_crash_reset(&self) {
+        BLK_CRASH.store(true, core::sync::atomic::Ordering::Relaxed)
+    }
 
     fn sys_get_domain(&self, name: &str) -> Option<DomainType> {
         super::query_domain(name)
@@ -240,7 +243,7 @@ impl CoreFunction for DomainSyscall {
 extern "C" {
     fn strampoline();
 }
-static BLK_CRASH: AtomicBool = AtomicBool::new(true);
+static BLK_CRASH: AtomicBool = AtomicBool::new(false);
 fn unwind() -> ! {
     BLK_CRASH.store(false, core::sync::atomic::Ordering::Relaxed);
     crate::domain_proxy::continuation::unwind()
